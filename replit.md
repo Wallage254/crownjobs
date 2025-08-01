@@ -1,6 +1,8 @@
 # Overview
 
-CrownOpportunities is a modern UK job board application specifically designed to connect African professionals with job opportunities in the United Kingdom. The platform focuses on sectors like construction, healthcare, hospitality, and skilled trades, with particular emphasis on visa sponsorship opportunities. Built as a full-stack web application, it features a React frontend with shadcn/ui components, Express.js backend, and PostgreSQL database managed through Drizzle ORM.
+CrownOpportunities is a modern UK job board application specifically designed to connect African professionals with job opportunities in the United Kingdom. The platform focuses on sectors like construction, healthcare, hospitality, and skilled trades, with particular emphasis on visa sponsorship opportunities. 
+
+**Current Status**: Successfully converted from Node.js/React to Laravel PHP (August 1, 2025) to be compatible with HostAfrica hosting which only supports PHP. The Laravel version maintains all original functionality while adapting to PHP/Laravel architecture patterns.
 
 # User Preferences
 
@@ -8,32 +10,34 @@ Preferred communication style: Simple, everyday language.
 
 # System Architecture
 
-## Frontend Architecture
+## Current Laravel Architecture (August 2025)
+- **Framework**: Laravel 10.3.3 with PHP 8.1
+- **Frontend**: Blade templates with Tailwind CSS and Alpine.js for interactivity
+- **Routing**: Laravel web routes and API routes
+- **Database**: PostgreSQL with Eloquent ORM
+- **File Uploads**: Laravel storage system with public disk configuration
+- **Authentication**: Laravel Sanctum for API authentication (admin features)
+- **Validation**: Laravel request validation with comprehensive rules
+
+## Previous Node.js Architecture (Converted)
 - **Framework**: React 18 with TypeScript using Vite as the build tool
 - **UI Framework**: shadcn/ui component library built on Radix UI primitives
 - **Styling**: Tailwind CSS with custom CSS variables for brand theming
 - **Routing**: Wouter for lightweight client-side routing
 - **State Management**: TanStack Query (React Query) for server state management
 - **Form Handling**: React Hook Form with Zod validation
-- **File Structure**: Component-based architecture with separate pages, components, and utility folders
+- **Backend**: Node.js with Express.js framework and TypeScript
 
-## Backend Architecture
-- **Runtime**: Node.js with Express.js framework
-- **Language**: TypeScript with ES modules
-- **API Design**: RESTful API endpoints with proper HTTP methods and status codes
-- **File Uploads**: Multer middleware for handling CV uploads and image files
-- **Error Handling**: Centralized error handling middleware with proper status codes
-- **Static Files**: Express static middleware for serving uploaded files
-
-## Database Design
-- **Database**: PostgreSQL with Neon serverless connection
-- **ORM**: Drizzle ORM for type-safe database operations
-- **Schema Management**: Drizzle Kit for migrations and schema synchronization
+## Database Design (Converted to Laravel)
+- **Database**: PostgreSQL (compatible with HostAfrica hosting)
+- **ORM**: Laravel Eloquent ORM with UUID primary keys
+- **Migrations**: Laravel migration system for schema management
 - **Core Tables**:
   - `jobs` - Job postings with company details, requirements, and metadata
   - `applications` - User applications linked to jobs with personal information and file uploads
   - `testimonials` - Success stories with photos and ratings
   - `messages` - Contact form submissions
+  - `categories` - Job categories with descriptions and GIF icons
   - `users` - Admin authentication system
 
 ## Authentication & Authorization
