@@ -20,4 +20,4 @@ Route::get('/jobs/{id}', [HomeController::class, 'jobDetail'])->name('job.detail
 Route::get('/admin', [HomeController::class, 'admin'])->name('admin');
 
 // Handle client-side routing - catch all other routes and return the home view
-Route::get('/{any}', [HomeController::class, 'index'])->where('any', '.*');
+Route::fallback([HomeController::class, 'index']);

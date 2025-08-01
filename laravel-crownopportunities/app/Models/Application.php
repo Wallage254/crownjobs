@@ -25,6 +25,12 @@ class Application extends Model
         'status',
     ];
 
+    protected $casts = [
+        'status' => 'string',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+    ];
+
     public function job()
     {
         return $this->belongsTo(Job::class);

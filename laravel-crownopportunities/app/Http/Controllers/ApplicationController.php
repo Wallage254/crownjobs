@@ -47,6 +47,11 @@ class ApplicationController extends Controller
             $validated['cv_file'] = $request->file('cv_file')->store('cv_files', 'public');
         }
 
+        // Set default status if not provided
+        if (!isset($validated['status'])) {
+            $validated['status'] = 'pending';
+        }
+
         $application = Application::create($validated);
         return response()->json($application->load('job'), 201);
     }

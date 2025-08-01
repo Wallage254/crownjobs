@@ -123,7 +123,7 @@ export default function JobDetail() {
             </div>
             <div className="text-right">
               <p className="text-sm text-gray-500 mb-4">
-                Posted {new Date(job.createdAt).toLocaleDateString()}
+                Posted {job.createdAt ? new Date(job.createdAt).toLocaleDateString() : 'Recently'}
               </p>
               <Button 
                 size="lg" 

@@ -156,11 +156,16 @@ export class DatabaseStorage implements IStorage {
   }
 
   async createApplication(insertApplication: InsertApplication): Promise<Application> {
-    const [application] = await db
-      .insert(applications)
-      .values(insertApplication)
-      .returning();
-    return application;
+    try {
+      const [application] = await db
+        .insert(applications)
+        .values(insertApplication)
+        .returning();
+      return application;
+    } catch (error) {
+      console.error('Application creation error:', error);
+      throw error;
+    }
   }
 
   async updateApplicationStatus(id: string, status: string): Promise<Application | undefined> {

@@ -3,6 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
@@ -12,7 +13,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('applications', function (Blueprint $table) {
-            $table->uuid('id')->primary();
+            $table->uuid('id')->primary()->default(DB::raw('gen_random_uuid()'));
             $table->uuid('job_id');
             $table->string('first_name');
             $table->string('last_name');
@@ -24,7 +25,7 @@ return new class extends Migration
             $table->text('cover_letter')->nullable();
             $table->text('experience')->nullable();
             $table->string('previous_role')->nullable();
-            $table->string('status')->default('pending');
+            $table->enum('status', ['pending', 'reviewing', 'shortlisted', 'rejected', 'hired'])->default('pending');
             $table->timestamps();
             
             $table->foreign('job_id')->references('id')->on('jobs')->onDelete('cascade');
