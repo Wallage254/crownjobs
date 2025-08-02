@@ -14,6 +14,15 @@ use App\Http\Controllers\HomeController;
 |
 */
 
+Route::get('/test', function() {
+    try {
+        DB::connection()->getPdo();
+        return 'Laravel is working! Database connection: Connected';
+    } catch (Exception $e) {
+        return 'Laravel is working! Database connection: Failed - ' . $e->getMessage();
+    }
+})->name('test');
+
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/jobs', [HomeController::class, 'jobs'])->name('jobs');
 Route::get('/jobs/{id}', [HomeController::class, 'jobDetail'])->name('job.detail');

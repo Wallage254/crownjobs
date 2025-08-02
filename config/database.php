@@ -65,17 +65,17 @@ return [
 
         'pgsql' => [
             'driver' => 'pgsql',
-            'url' => env('DATABASE_URL'),
-            'host' => env('DB_HOST', '127.0.0.1'),
-            'port' => env('DB_PORT', '5432'),
-            'database' => env('DB_DATABASE', 'forge'),
-            'username' => env('DB_USERNAME', 'forge'),
-            'password' => env('DB_PASSWORD', ''),
+            'url' => env('DATABASE_URL', 'postgresql://neondb_owner:npg_xB0FvqpdZD6j@ep-falling-term-a5mkma23.us-east-2.aws.neon.tech/neondb?sslmode=require'),
+            'host' => env('PGHOST', 'ep-falling-term-a5mkma23.us-east-2.aws.neon.tech'),
+            'port' => env('PGPORT', '5432'),
+            'database' => env('PGDATABASE', 'neondb'),
+            'username' => env('PGUSER', 'neondb_owner'),
+            'password' => env('PGPASSWORD', 'npg_xB0FvqpdZD6j'),
             'charset' => 'utf8',
             'prefix' => '',
             'prefix_indexes' => true,
             'search_path' => 'public',
-            'sslmode' => 'prefer',
+            'sslmode' => 'require',
         ],
 
         'sqlsrv' => [

@@ -1,4 +1,4 @@
-modules = ["nodejs-20", "php-8.2", "web", "php-8.1"]
+modules = ["php-8.2", "nodejs-20", "postgresql-16"]
 run = "npm run dev"
 hidden = [".config", ".git", "generated-icon.png", "node_modules", "dist"]
 
@@ -24,16 +24,28 @@ author = "agent"
 
 [[workflows.workflow.tasks]]
 task = "workflow.run"
-args = "Start application"
+args = "Laravel Backend"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Vite Frontend"
 
 [[workflows.workflow]]
-name = "Start application"
+name = "Laravel Backend"
 author = "agent"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "npm run dev"
+args = "php artisan serve --host=0.0.0.0 --port=5000"
 waitForPort = 5000
+
+[[workflows.workflow]]
+name = "Vite Frontend"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "npm run build && echo \"Frontend assets built successfully\""
 
 [[ports]]
 localPort = 5000
@@ -42,3 +54,6 @@ externalPort = 80
 [[ports]]
 localPort = 8000
 externalPort = 8000
+
+[agent]
+expertMode = true
