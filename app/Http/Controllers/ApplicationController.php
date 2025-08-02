@@ -40,11 +40,13 @@ class ApplicationController extends Controller
 
         // Handle file uploads
         if ($request->hasFile('profile_photo')) {
-            $validated['profile_photo'] = $request->file('profile_photo')->store('profile_photos', 'public');
+            $photoPath = $request->file('profile_photo')->store('uploads', 'public');
+            $validated['profile_photo'] = $photoPath;
         }
 
         if ($request->hasFile('cv_file')) {
-            $validated['cv_file'] = $request->file('cv_file')->store('cv_files', 'public');
+            $cvPath = $request->file('cv_file')->store('uploads', 'public');
+            $validated['cv_file'] = $cvPath;
         }
 
         // Set default status if not provided

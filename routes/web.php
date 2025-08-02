@@ -23,9 +23,26 @@ Route::get('/test', function() {
     }
 })->name('test');
 
+Route::get('/create-admin', function() {
+    $admin = \App\Models\User::firstOrCreate([
+        'email' => 'admin@crownopportunities.com'
+    ], [
+        'name' => 'Admin',
+        'password' => \Hash::make('admin123'),
+        'email_verified_at' => now()
+    ]);
+
+    return response()->json([
+        'message' => 'Default admin created successfully',
+        'email' => 'admin@crownopportunities.com', 
+        'password' => 'admin123'
+    ]);
+});
+
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/jobs', [HomeController::class, 'jobs'])->name('jobs');
 Route::get('/jobs/{id}', [HomeController::class, 'jobDetail'])->name('job.detail');
+Route::get('/admin/login', function() { return view('admin-login'); })->name('admin.login');
 Route::get('/admin', [HomeController::class, 'admin'])->name('admin');
 
 // Handle client-side routing - catch all other routes and return the home view

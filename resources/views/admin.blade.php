@@ -3,8 +3,32 @@
 @section('title', 'Admin Panel - CrownOpportunities')
 
 @section('content')
-<div x-data="adminPanel()" class="bg-gray-50 min-h-screen">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+<div x-data="adminPanel()" x-init="checkAuth()" class="bg-gray-50 min-h-screen">
+    <!-- Login Required Message -->
+    <div x-show="!isAuthenticated" class="min-h-screen flex items-center justify-center">
+        <div class="text-center">
+            <h1 class="text-3xl font-bold text-gray-900 mb-4">Admin Access Required</h1>
+            <p class="text-gray-600 mb-6">Please log in to access the admin panel.</p>
+            <a href="/admin/login" class="bg-crown-blue text-white px-6 py-3 rounded-lg hover:bg-blue-800">Go to Login</a>
+        </div>
+    </div>
+    
+    <!-- Admin Panel Content -->
+    <div x-show="isAuthenticated" class="relative">
+        <!-- Header with Logout -->
+        <div class="bg-white shadow-sm border-b">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+                <h1 class="text-2xl font-bold text-crown-blue">CrownOpportunities Admin</h1>
+                <div class="flex items-center space-x-4">
+                    <span class="text-gray-600">Welcome, <span x-text="adminUser?.username || 'Admin'"></span></span>
+                    <button @click="logout()" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700">
+                        Logout
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div class="mb-8">
             <h1 class="text-3xl font-bold text-gray-900 mb-2">Admin Panel</h1>
             <p class="text-gray-600">Manage jobs, applications, testimonials, and categories</p>
@@ -179,8 +203,13 @@
 function adminPanel() {
     return {
         activeTab: 'categories',
+        isAuthenticated: false,
+        adminUser: null,
         categories: [],
         jobs: [],
+        applications: [],
+        testimonials: [],
+        messages: [],
         showCategoryForm: false,
         editingCategory: null,
         categoryForm: {
@@ -190,13 +219,54 @@ function adminPanel() {
         },
         
         init() {
+            // Removed - this will be called by checkAuth() if authenticated
+        },
+        
+        // Authentication methods
+        checkAuth() {
+            const token = localStorage.getItem('admin_token');
+            const user = localStorage.getItem('admin_user');
+            
+            if (token && user) {
+                this.isAuthenticated = true;
+                this.adminUser = JSON.parse(user);
+                this.loadInitialData();
+            } else {
+                this.isAuthenticated = false;
+            }
+        },
+        
+        logout() {
+            localStorage.removeItem('admin_token');
+            localStorage.removeItem('admin_user');
+            this.isAuthenticated = false;
+            window.location.href = '/admin/login';
+        },
+        
+        loadInitialData() {
             this.loadCategories();
             this.loadJobs();
+            this.loadApplications();
+            this.loadTestimonials();
+            this.loadMessages();
+        },
+        
+        async apiRequest(url, options = {}) {
+            const token = localStorage.getItem('admin_token');
+            return fetch(url, {
+                ...options,
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    ...options.headers
+                }
+            });
         },
         
         async loadCategories() {
             try {
-                const response = await fetch('/api/categories');
+                const response = await this.apiRequest('/api/categories');
                 this.categories = await response.json();
             } catch (error) {
                 console.error('Error loading categories:', error);
@@ -205,10 +275,37 @@ function adminPanel() {
         
         async loadJobs() {
             try {
-                const response = await fetch('/api/jobs');
+                const response = await this.apiRequest('/api/jobs');
                 this.jobs = await response.json();
             } catch (error) {
                 console.error('Error loading jobs:', error);
+            }
+        },
+        
+        async loadApplications() {
+            try {
+                const response = await this.apiRequest('/api/applications');
+                this.applications = await response.json();
+            } catch (error) {
+                console.error('Error loading applications:', error);
+            }
+        },
+        
+        async loadTestimonials() {
+            try {
+                const response = await this.apiRequest('/api/testimonials');
+                this.testimonials = await response.json();
+            } catch (error) {
+                console.error('Error loading testimonials:', error);
+            }
+        },
+        
+        async loadMessages() {
+            try {
+                const response = await this.apiRequest('/api/messages');
+                this.messages = await response.json();
+            } catch (error) {
+                console.error('Error loading messages:', error);
             }
         },
         
@@ -276,6 +373,48 @@ function adminPanel() {
                     console.error('Error deleting job:', error);
                 }
             }
+        },
+        
+        // Authentication methods
+        checkAuth() {
+            const token = localStorage.getItem('admin_token');
+            const user = localStorage.getItem('admin_user');
+            
+            if (token && user) {
+                this.isAuthenticated = true;
+                this.adminUser = JSON.parse(user);
+                this.loadInitialData();
+            } else {
+                this.isAuthenticated = false;
+            }
+        },
+        
+        logout() {
+            localStorage.removeItem('admin_token');
+            localStorage.removeItem('admin_user');
+            this.isAuthenticated = false;
+            window.location.href = '/admin/login';
+        },
+        
+        loadInitialData() {
+            this.loadJobs();
+            this.loadApplications();
+            this.loadCategories();
+            this.loadTestimonials();
+            this.loadMessages();
+        },
+        
+        async apiRequest(url, options = {}) {
+            const token = localStorage.getItem('admin_token');
+            return fetch(url, {
+                ...options,
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    ...options.headers
+                }
+            });
         }
     }
 }

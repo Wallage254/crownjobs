@@ -36,6 +36,9 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
     
+    <!-- Form Handler -->
+    <script src="/js/forms.js"></script>
+    
     <!-- Custom Styles -->
     <style>
         .gradient-bg {
