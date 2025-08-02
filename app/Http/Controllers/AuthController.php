@@ -13,25 +13,36 @@ class AuthController extends Controller
 {
     public function login(Request $request): JsonResponse
     {
-        $credentials = $request->validate([
-            'username' => 'required|string',
-            'password' => 'required|string',
-        ]);
-
-        if (Auth::attempt($credentials)) {
-            $user = Auth::user();
-            $token = $user->createToken('admin-token')->plainTextToken;
-            
-            return response()->json([
-                'success' => true,
-                'user' => $user,
-                'token' => $token
+        try {
+            $credentials = $request->validate([
+                'username' => 'required|string',
+                'password' => 'required|string',
             ]);
-        }
 
-        throw ValidationException::withMessages([
-            'username' => ['The provided credentials are incorrect.'],
-        ]);
+            // Find the user manually since we're using username not email
+            $user = User::where('username', $credentials['username'])->first();
+            
+            if ($user && Hash::check($credentials['password'], $user->password)) {
+                $token = $user->createToken('admin-token')->plainTextToken;
+                
+                return response()->json([
+                    'success' => true,
+                    'user' => $user,
+                    'token' => $token
+                ]);
+            }
+
+            return response()->json([
+                'success' => false,
+                'message' => 'The provided credentials are incorrect.'
+            ], 401);
+            
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Login failed: ' . $e->getMessage()
+            ], 500);
+        }
     }
 
     public function logout(Request $request): JsonResponse
