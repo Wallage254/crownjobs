@@ -65,7 +65,6 @@ return [
 
         'pgsql' => [
             'driver' => 'pgsql',
-            'url' => env('DATABASE_URL', 'postgresql://neondb_owner:npg_xB0FvqpdZD6j@ep-falling-term-a5mkma23.us-east-2.aws.neon.tech/neondb?sslmode=require'),
             'host' => env('PGHOST', 'ep-falling-term-a5mkma23.us-east-2.aws.neon.tech'),
             'port' => env('PGPORT', '5432'),
             'database' => env('PGDATABASE', 'neondb'),
